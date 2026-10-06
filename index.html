@@ -1,0 +1,1972 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Siete meses contigo ❤️</title>
+<style>
+*{
+    box-sizing:border-box;
+}
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+body{
+    background:#09040d;
+    color:white;
+    font-family:Georgia,serif;
+}
+button,
+input{
+    font:inherit;
+}
+#app{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 20%,#32102e,#09040d 65%);
+}
+/* =========================================================
+   ESCENAS
+========================================================= */
+.scene{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1.2s ease;
+}
+.scene.active{
+    opacity:1;
+    pointer-events:auto;
+}
+/* =========================================================
+   LLUVIA DE CORAZONES
+========================================================= */
+#rain{
+    position:absolute;
+    inset:0;
+    z-index:100;
+    pointer-events:none;
+    overflow:hidden;
+}
+.rain{
+    position:absolute;
+    top:-10vh;
+    left:var(--x);
+    font-size:var(--s);
+    opacity:var(--o);
+    animation:fall var(--d) linear infinite;
+    animation-delay:var(--delay);
+    filter:drop-shadow(0 0 5px #ff6b9d55);
+}
+@keyframes fall{
+    to{
+        transform:
+            translate(var(--dx),120vh)
+            rotate(360deg);
+    }
+}
+/* =========================================================
+   ESCENA FECHA
+========================================================= */
+#date{
+    display:grid;
+    place-items:center;
+    z-index:10;
+}
+.card{
+    width:min(88vw,520px);
+    min-height:430px;
+    padding:25px;
+    border-radius:28px;
+    text-align:center;
+    background:
+        linear-gradient(145deg, rgba(40,12,39,.96), rgba(20,7,26,.94));
+    border:1px solid #ffc1df55;
+    box-shadow:
+        0 25px 80px #000b,
+        inset 0 0 35px #ff6b9d08;
+    transition:
+        1.5s cubic-bezier(.2,.9,.2,1);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    z-index:5;
+}
+.card::before{
+    content:"";
+    position:absolute;
+    inset:1px;
+    border-radius:27px;
+    border:1px solid #ffffff0b;
+    pointer-events:none;
+}
+.card.lift{
+    transform:
+        translateY(-115vh)
+        scale(.8)
+        rotate(-3deg);
+
+    opacity:0;
+}
+.snoopy{
+    display:block;
+    width:min(70vw,300px);
+    max-height:34vh;
+    object-fit:contain;
+    margin:auto;
+    animation:
+        snoopyFloat 4s ease-in-out infinite;
+}
+@keyframes snoopyFloat{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-8px);
+    }
+}
+h1{
+    font-size:clamp(25px,5vw,38px);
+    margin:10px 0 18px;
+    text-shadow:0 4px 20px #ff4e8a33;
+}
+form{
+    width:100%;
+    display:flex;
+    gap:9px;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    margin:0 auto;
+}
+.date{
+    width:min(290px,72vw);
+    padding:13px;
+    border-radius:14px;
+    border:1px solid #ff9dc766;
+    background:#fff1;
+    color:#fff;
+    text-align:center;
+    outline:0;
+    transition:.3s ease;
+}
+.date::placeholder{
+    color:#ffffff99;
+}
+.date:focus{
+    border-color:#ff8db8;
+    box-shadow:0 0 0 4px #ff6b9d12;
+    transform:translateY(-2px);
+}
+.btn{
+    border:0;
+    border-radius:14px;
+    padding:13px 18px;
+    color:#fff;
+    background:
+        linear-gradient(135deg, #c52e62, #76235b);
+    cursor:pointer;
+    box-shadow:
+        0 8px 20px #0005;
+    transition:.25s ease;
+}
+.btn:hover{
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:0 12px 28px #0007;
+}
+.btn:active{
+    transform:scale(.96);
+}
+.err{
+    height:25px;
+    color:#ff9fbd;
+    font:14px Arial;
+    margin-top:5px;
+}
+.specialBox{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:14px;
+    overflow:hidden;
+}
+.special{
+    width:100%;
+    max-width:470px;
+    padding:0 12px;
+    text-align:center;
+    opacity:0;
+    transform:translateY(12px);
+    transition:
+        opacity .9s ease,
+        transform .9s ease;
+    font-size:clamp(20px,4.5vw,30px);
+    line-height:1.3;
+    color:#ffd6e5;
+    text-shadow:
+        0 0 20px #ff4d8d55;
+}
+.special.show{
+    opacity:1!important;
+    transform:translateY(0)!important;
+}
+/* Texto secundario que aparece después */
+.specialSub{
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    color:#ffabc8;
+    font:600 14px Arial;
+    transition:
+        max-height 1s ease,
+        opacity 1s ease,
+        margin .8s ease;
+    margin-top:0;
+}
+.specialSub.show{
+    max-height:60px;
+    opacity:1;
+    margin-top:10px;
+}
+/* =========================================================
+   FLORES INTRO
+========================================================= */
+#introFlowers{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    overflow:hidden;
+    opacity:1;
+    pointer-events:none;
+}
+#introFlowers .flower{
+    pointer-events:none;
+    filter:saturate(1.22) contrast(1.05) drop-shadow(0 14px 16px #0009);
+}
+#introFlowers .flower__head{
+    filter:drop-shadow(0 8px 10px #0009) saturate(1.14);
+}
+#introFlowers .flower__stem{width:6px;}
+#introFlowers .flower__leaf{
+    filter:saturate(1.12) drop-shadow(0 4px 4px #0007);
+}
+#introFlowers .flower--rose .flower__head{transform:translateX(-50%) scale(1.14);}
+#introFlowers .flower--tulip .flower__head{transform:translateX(-50%) scale(1.16);}
+#introFlowers .flower--carnation .flower__head{transform:translateX(-50%) scale(1.12);}
+#introFlowers .flower--sunflower .flower__head{transform:translateX(-50%) scale(1.18);}
+#introFlowers .flower--daisy .flower__head{transform:translateX(-50%) scale(1.12);}
+#introFlowers .sunflower__petal{filter:saturate(1.15);}
+/* =========================================================
+   JARDÍN
+========================================================= */
+#garden{
+    background:
+        linear-gradient(#120818, #201024 43%, #07160a);
+    z-index:5;
+}
+.camera{
+    position:absolute;
+    inset:0;
+    transition:
+        transform 4.5s cubic-bezier(.18,.75,.2,1);
+}
+.camera.zoom{
+    transform:scale(1.035);
+}
+.ground{
+    position:absolute;
+    left:-5%;
+    right:-5%;
+    bottom:-8%;
+    height:53%;
+    border-radius:
+        50% 50% 0 0 / 15% 15% 0 0;
+    background:
+        radial-gradient(ellipse, #23652d, #0a2611 65%, #031009);
+    box-shadow:
+        inset 0 20px 50px #0004;
+}
+.moon{
+    position:absolute;
+    right:9%;
+    top:8%;
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:#ffe9d1;
+    box-shadow:
+        0 0 45px #ffe1c566,
+        0 0 100px #ffe1c522;
+    animation:
+        moonGlow 4s ease-in-out infinite;
+}
+@keyframes moonGlow{
+    50%{
+        box-shadow:
+            0 0 60px #ffe1c577,
+            0 0 120px #ffe1c533;
+    }
+}
+#flowers{
+    position:absolute;
+    inset:0;
+    z-index:5;
+    pointer-events:none;
+}
+/* =========================================================
+   FLORES — ESTRUCTURA BOTÁNICA
+========================================================= */
+.flower{
+    position:absolute;
+    left:var(--x);
+    bottom:var(--b);
+    width:var(--w);
+    height:var(--h);
+    transform-origin:50% 100%;
+    opacity:0;
+    pointer-events:none;
+    filter:drop-shadow(0 9px 10px #0007);
+    animation:flowerRise 1.15s cubic-bezier(.16,.82,.2,1) var(--bloom) forwards;
+}
+@keyframes flowerRise{
+    0%{opacity:0;transform:translateY(46px) scale(.72,.35);}
+    58%{opacity:1;transform:translateY(-5px) scale(1.025,.98);}
+    78%{transform:translateY(1px) scale(.985,1.01);}
+    100%{opacity:1;transform:translateY(0) scale(1);}
+}
+.botanical{
+    position:absolute;
+    inset:0;
+    transform-origin:50% 100%;
+    animation:plantSway var(--sw) ease-in-out calc(var(--bloom) + 1.15s) infinite alternate;
+}
+@keyframes plantSway{
+    from{transform:rotate(calc(var(--lean) - 1.15deg)) translateX(-1px);}
+    to{transform:rotate(calc(var(--lean) + 1.55deg)) translateX(2px);}
+}
+.flower__stem{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    width:5px;
+    height:79%;
+    background:linear-gradient(90deg,#123717 0%,#2e6d35 28%,#74ae58 48%,#2b6a31 67%,#102f16 100%);
+    border-radius:90%;
+    transform:translateX(-50%) rotate(var(--stemlean));
+    transform-origin:bottom;
+    box-shadow:1px 0 2px #071d09;
+}
+.flower__stem:after{
+    content:"";
+    position:absolute;
+    left:45%;top:8%;width:1px;height:86%;
+    background:#b5d78355;
+    transform:rotate(-2deg);
+}
+.flower__leaf{
+    position:absolute;
+    width:50%;height:14%;bottom:35%;left:46%;
+    border-radius:100% 8% 100% 8%;
+    background:linear-gradient(135deg,#9acb72 0%,#4f9448 38%,#286431 70%,#174323 100%);
+    transform:rotate(-28deg);
+    box-shadow:inset -3px -3px 4px #12391866,inset 3px 2px 3px #d5ee9c33;
+}
+.flower__leaf:after{
+    content:"";position:absolute;left:8%;top:48%;width:82%;height:1px;
+    background:#d2ed9b66;transform:rotate(-12deg);
+}
+.flower__leaf--right{left:4%;bottom:50%;transform:scaleX(-1) rotate(-25deg);}
+.flower__head{
+    position:absolute;left:50%;top:0;width:80%;height:34%;
+    transform:translateX(-50%);transform-origin:50% 80%;opacity:0;z-index:4;
+    animation:headBloom 1s cubic-bezier(.18,.86,.2,1) calc(var(--bloom) + .28s) forwards;
+}
+@keyframes headBloom{
+    0%{opacity:0;transform:translateX(-50%) scale(.28,.12) rotate(-6deg);}
+    62%{opacity:1;transform:translateX(-50%) scale(1.04) rotate(2deg);}
+    82%{transform:translateX(-50%) scale(.985) rotate(-.7deg);}
+    100%{opacity:1;transform:translateX(-50%) scale(1) rotate(0);}
+}
+/* ROSA */
+.flower--rose .flower__head{width:88%;height:39%;}
+.rose__outer-petal,.rose__petal{
+    position:absolute;left:50%;top:50%;transform-origin:12% 52%;
+    border-radius:70% 32% 78% 40%;
+    background:linear-gradient(145deg,#fff9 0%,var(--c) 25%,var(--c2) 68%,#690d30 100%);
+    box-shadow:inset -5px -7px 8px #5b0b2d55,inset 3px 2px 5px #fff5,0 2px 4px #0003;
+}
+.rose__outer-petal{width:48%;height:92%;}
+.rose__petal{width:40%;height:76%;z-index:2;}
+.rose__outer-petal--1{transform:translate(-4%,-50%) rotate(0deg);}
+.rose__outer-petal--2{transform:translate(-4%,-50%) rotate(90deg) scale(.96);}
+.rose__outer-petal--3{transform:translate(-4%,-50%) rotate(180deg) scale(.92);}
+.rose__outer-petal--4{transform:translate(-4%,-50%) rotate(270deg) scale(.96);}
+.rose__petal--1{transform:translate(-4%,-50%) rotate(35deg) scale(.94);}
+.rose__petal--2{transform:translate(-4%,-50%) rotate(107deg) scale(.88);}
+.rose__petal--3{transform:translate(-4%,-50%) rotate(179deg) scale(.84);}
+.rose__petal--4{transform:translate(-4%,-50%) rotate(251deg) scale(.88);}
+.rose__petal--5{transform:translate(-4%,-50%) rotate(323deg) scale(.94);}
+.rose__center{position:absolute;left:50%;top:50%;width:27%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:60% 40% 55% 45%;z-index:4;background:radial-gradient(circle at 42% 38%,#ffdce2 0 10%,var(--c) 18% 43%,#a41643 45% 65%,#67112f 66% 100%);box-shadow:inset 2px -2px 3px #5b0d2b66,0 2px 4px #0004;}
+/* TULIP */
+.flower--tulip .flower__head{width:84%;height:39%;}
+.tulip__petal{position:absolute;bottom:2%;height:98%;width:42%;border-radius:70% 70% 42% 42%;background:linear-gradient(160deg,#fff9 0%,var(--c) 32%,var(--c2) 72%,#68102f 100%);box-shadow:inset -4px -6px 7px #64112f55,inset 2px 2px 4px #fff5,0 2px 4px #0003;}
+.tulip__petal--back{left:50%;transform:translateX(-50%) scale(.92);z-index:1;}
+.tulip__petal--left{left:9%;transform:rotate(-13deg);z-index:2;}
+.tulip__petal--center{left:29%;transform:scale(1.04);z-index:3;}
+.tulip__petal--right{right:9%;transform:rotate(13deg);z-index:2;}
+/* CLAVEL */
+.flower--carnation .flower__head{width:102%;height:39%;}
+.carnation__petal{position:absolute;left:50%;top:50%;width:33%;height:102%;transform-origin:50% 50%;border-radius:48% 52% 58% 42%;background:repeating-linear-gradient(94deg,transparent 0 3px,#ffffff28 4px 5px),radial-gradient(circle at 50% 34%,#fff9 0 5%,transparent 15%),linear-gradient(150deg,#fff8 0%,var(--c) 32%,var(--c2) 72%,#78143f 100%);box-shadow:inset 0 0 7px #fff6,inset -3px -5px 6px #72113b55,0 2px 3px #0002;}
+.carnation__petal--1{transform:translate(-50%,-50%) rotate(0deg);}.carnation__petal--2{transform:translate(-50%,-50%) rotate(60deg) scale(.96);}.carnation__petal--3{transform:translate(-50%,-50%) rotate(120deg) scale(.98);}.carnation__petal--4{transform:translate(-50%,-50%) rotate(180deg) scale(.94);}.carnation__petal--5{transform:translate(-50%,-50%) rotate(240deg) scale(.98);}.carnation__petal--6{transform:translate(-50%,-50%) rotate(300deg) scale(.96);}
+.carnation__center{position:absolute;left:50%;top:50%;width:18%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#ffe8ae,#bc7726 55%,#5d3012 100%);box-shadow:0 2px 4px #0004;z-index:3;}
+/* GIRASOL */
+.flower--sunflower .flower__head{width:120%;height:47%;}
+.sunflower__petals,.daisy__petals{position:absolute;inset:0;}
+.sunflower__petal,.daisy__petal{position:absolute;left:50%;top:50%;transform-origin:50% 50%;display:block;}
+.sunflower__petal{width:28%;height:103%;border-radius:90% 22% 90% 22%;background:linear-gradient(90deg,#fff7 0%,#ffd94b 24%,#f3b718 68%,#b96c06 100%);box-shadow:inset -4px -5px 6px #89520555,inset 2px 2px 4px #fff5,0 2px 3px #0003;}
+.sunflower__petal:nth-child(1){transform:translate(-50%,-50%) rotate(0deg);}.sunflower__petal:nth-child(2){transform:translate(-50%,-50%) rotate(22.5deg);}.sunflower__petal:nth-child(3){transform:translate(-50%,-50%) rotate(45deg);}.sunflower__petal:nth-child(4){transform:translate(-50%,-50%) rotate(67.5deg);}.sunflower__petal:nth-child(5){transform:translate(-50%,-50%) rotate(90deg);}.sunflower__petal:nth-child(6){transform:translate(-50%,-50%) rotate(112.5deg);}.sunflower__petal:nth-child(7){transform:translate(-50%,-50%) rotate(135deg);}.sunflower__petal:nth-child(8){transform:translate(-50%,-50%) rotate(157.5deg);}.sunflower__petal:nth-child(9){transform:translate(-50%,-50%) rotate(180deg);}.sunflower__petal:nth-child(10){transform:translate(-50%,-50%) rotate(202.5deg);}.sunflower__petal:nth-child(11){transform:translate(-50%,-50%) rotate(225deg);}.sunflower__petal:nth-child(12){transform:translate(-50%,-50%) rotate(247.5deg);}.sunflower__petal:nth-child(13){transform:translate(-50%,-50%) rotate(270deg);}.sunflower__petal:nth-child(14){transform:translate(-50%,-50%) rotate(292.5deg);}.sunflower__petal:nth-child(15){transform:translate(-50%,-50%) rotate(315deg);}.sunflower__petal:nth-child(16){transform:translate(-50%,-50%) rotate(337.5deg);}
+.sunflower__center{position:absolute;left:50%;top:50%;width:43%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#3b1a0e 0 12%,#9a5b24 13% 20%,#2d120b 21% 33%,#8b4e1e 34% 44%,#2d120b 45% 58%,#9a5b24 59% 68%,#32150c 69% 100%);box-shadow:inset 0 0 0 2px #552712,0 2px 5px #0005;}
+.sunflower__center span{position:absolute;width:9px;height:9px;border-radius:50%;background:#5b2b12;box-shadow:0 0 2px #d58b3a;}
+.sunflower__center span:nth-child(1){left:48%;top:12%;}.sunflower__center span:nth-child(2){left:72%;top:28%;}.sunflower__center span:nth-child(3){left:76%;top:58%;}.sunflower__center span:nth-child(4){left:55%;top:76%;}.sunflower__center span:nth-child(5){left:25%;top:72%;}.sunflower__center span:nth-child(6){left:10%;top:48%;}.sunflower__center span:nth-child(7){left:24%;top:25%;}.sunflower__center span:nth-child(8){left:43%;top:43%;}.sunflower__center span:nth-child(9){left:61%;top:49%;}
+/* MARGARITA */
+.flower--daisy .flower__head{width:82%;height:32%;}
+.daisy__petal{width:25%;height:90%;border-radius:90% 20% 90% 20%;background:linear-gradient(90deg,#fff,#f7f2e8 65%,#d8d2c5);box-shadow:inset -2px -3px 3px #7772;}
+.daisy__petal:nth-child(1){transform:translate(-50%,-50%) rotate(0deg);}.daisy__petal:nth-child(2){transform:translate(-50%,-50%) rotate(30deg);}.daisy__petal:nth-child(3){transform:translate(-50%,-50%) rotate(60deg);}.daisy__petal:nth-child(4){transform:translate(-50%,-50%) rotate(90deg);}.daisy__petal:nth-child(5){transform:translate(-50%,-50%) rotate(120deg);}.daisy__petal:nth-child(6){transform:translate(-50%,-50%) rotate(150deg);}.daisy__petal:nth-child(7){transform:translate(-50%,-50%) rotate(180deg);}.daisy__petal:nth-child(8){transform:translate(-50%,-50%) rotate(210deg);}.daisy__petal:nth-child(9){transform:translate(-50%,-50%) rotate(240deg);}.daisy__petal:nth-child(10){transform:translate(-50%,-50%) rotate(270deg);}.daisy__petal:nth-child(11){transform:translate(-50%,-50%) rotate(300deg);}.daisy__petal:nth-child(12){transform:translate(-50%,-50%) rotate(330deg);}
+.daisy__center{position:absolute;left:50%;top:50%;width:23%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#fff09a,#d49a26 45%,#7a4216 100%);box-shadow:0 2px 4px #0004;}
+@keyframes tulipBloom{
+    0%{
+        opacity:0;
+        transform:
+            translateX(-50%)
+            scaleY(.12)
+            scaleX(.72);
+    }
+    55%{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scaleY(1.08)
+            scaleX(1.04);
+    }
+    78%{
+        transform:
+            translateX(-50%)
+            scaleY(.96)
+            scaleX(.99);
+    }
+    100%{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scale(1);
+    }
+}
+@keyframes carnationBloom{
+    0%{
+        opacity:0;
+        transform:
+            translateX(-50%)
+            scale(.08)
+            rotate(-7deg);
+    }
+    50%{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scale(1.12)
+            rotate(3deg);
+    }
+    75%{
+        transform:
+            translateX(-50%)
+            scale(.96)
+            rotate(-1deg);
+    }
+    100%{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scale(1)
+            rotate(0);
+    }
+}
+@keyframes sunflowerBloom{
+    0%{
+        opacity:0;
+        transform:
+            translateX(-50%)
+            scale(.08)
+            rotate(-14deg);
+    }
+    50%{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scale(1.08)
+            rotate(5deg);
+    }
+    78%{
+        transform:
+            translateX(-50%)
+            scale(.98)
+            rotate(-2deg);
+    }
+    100%{
+        opacity:1;
+        transform:
+            translateX(-50%)
+            scale(1)
+            rotate(0);
+    }
+}
+/* =========================================================
+   BUZÓN
+========================================================= */
+#mailboxWrap{
+    position:absolute;
+    left:50%;
+    bottom:19%;
+    transform:
+        translate(-50%,70vh);
+    transition:
+        2.4s cubic-bezier(.2,.9,.2,1);
+    z-index:9;
+}
+#mailboxWrap.show{
+    transform:
+        translate(-50%,0)!important;
+}
+.mailbox{
+    width:190px;
+    height:160px;
+    position:relative;
+    cursor:pointer;
+    filter:
+        drop-shadow(0 20px 18px #0008);
+    animation:
+        mailboxFloat 3s ease-in-out infinite;
+}
+@keyframes mailboxFloat{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-6px);
+    }
+}
+.body{
+    position:absolute;
+    left:10px;
+    bottom:0;
+    width:170px;
+    height:112px;
+    border-radius:15px;
+    background:
+        linear-gradient(145deg, #791628, #c0384c, #651222);
+    border:3px solid #480b17;
+}
+.roof{
+    position:absolute;
+    left:10px;
+    top:0;
+    width:170px;
+    height:62px;
+    border-radius:
+        90px 90px 0 0;
+    background:
+        linear-gradient(135deg, #a32339, #df5966, #731625);
+    border:3px solid #480b17;
+    border-bottom:0;
+    transform-origin:bottom;
+}
+.slot{
+    position:absolute;
+    left:42px;
+    top:55px;
+    width:106px;
+    height:18px;
+    border-radius:10px;
+    background:#280711;
+}
+.flag{
+    position:absolute;
+    right:-3px;
+    top:20px;
+    width:10px;
+    height:80px;
+    background:#e7c478;
+    border-radius:5px;
+    transition:.5s ease;
+}
+.flag:after{
+    content:"";
+    position:absolute;
+    top:0;
+    right:-3px;
+    width:40px;
+    height:23px;
+    background:#e7c478;
+    border-radius:5px;
+}
+.mailbox:hover .flag{
+    transform:rotate(-10deg);
+}
+.hint{
+    position:absolute;
+    top:165px;
+    left:50%;
+    transform:
+        translateX(-50%);
+    white-space:nowrap;
+    background:#190816dd;
+    border:1px solid #ffc1dd66;
+    padding:10px 17px;
+    border-radius:20px;
+    color:#ffd9e8;
+    font:600 15px Arial;
+    animation:
+        floatHint 1.8s infinite;
+}
+@keyframes floatHint{
+    50%{
+        transform:
+            translate(-50%,-8px);
+    }
+}
+.mailbox.open .roof{
+    transform:
+        rotateX(45deg)
+        translateY(-8px);
+    transition:.8s;
+}
+/* =========================================================
+   CARTA CERRADA
+========================================================= */
+#roll{
+    z-index:20;
+    background:
+        radial-gradient(circle, #35132f, #0d050d 72%);
+}
+.roll{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:min(82vw,380px);
+    transform:
+        translate(-50%,-50%)
+        scale(.1)
+        rotate(-8deg);
+    opacity:0;
+    transition:
+        1.2s cubic-bezier(.2,.9,.2,1);
+    cursor:pointer;
+}
+.roll.show{
+    opacity:1;
+    transform:
+        translate(-50%,-50%)
+        scale(1)
+        rotate(0);
+}
+.paper{
+    height:230px;
+    border-radius:22px;
+    background:
+        linear-gradient(100deg, #dcbf8b, #fff1ca, #d4b578);
+    border:4px solid #8c6639;
+    box-shadow:
+        0 25px 80px #000b;
+    position:relative;
+    animation:
+        paperGlow 3s ease-in-out infinite;
+}
+@keyframes paperGlow{
+    50%{
+        box-shadow:
+            0 25px 80px #000b,
+            0 0 35px #ff7baa22;
+    }
+}
+.paper:before,
+.paper:after{
+    content:"";
+    position:absolute;
+    left:5%;
+    right:5%;
+    height:28px;
+    border-radius:50%;
+    background:
+        linear-gradient(#c3985e, #f5dca4, #b9874d);
+}
+.paper:before{
+    top:-12px;
+}
+.paper:after{
+    bottom:-12px;
+}
+.ribbon{
+    position:absolute;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:23px;
+    transform:
+        translateX(-50%);
+    background:#c7243c;
+}
+.knot{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:70px;
+    height:42px;
+    transform:
+        translate(-50%,-50%);
+    background:#d22a42;
+    border-radius:50%;
+    border:3px solid #8e1428;
+    box-shadow:
+        0 5px 12px #0003;
+}
+.rollhint{
+    text-align:center;
+    margin-top:18px;
+    font:
+        600 16px Arial;
+    color:#ffe0ec;
+}
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
+.spark{
+    position:absolute;
+    color:var(--c);
+    left:var(--x);
+    top:var(--y);
+    font-size:var(--s);
+    animation:
+        spark 3s infinite ease-in-out;
+    animation-delay:var(--d);
+    filter:
+        drop-shadow(0 0 10px currentColor);
+}
+@keyframes spark{
+    0%,100%{
+        opacity:.05;
+        transform:scale(.3);
+    }
+    50%{
+        opacity:.7;
+        transform:scale(1.2);
+    }
+}
+/* =========================================================
+   CARTA ABIERTA
+========================================================= */
+#open{
+    z-index:20;
+    overflow:auto;
+    background:
+        radial-gradient(circle, #35132f, #0d050d 72%);
+}
+.letterWrap{
+    min-height:100%;
+    display:grid;
+    place-items:center;
+    padding:5vh 4vw;
+}
+.letter{
+    width:min(88vw,720px);
+    max-height:88vh;
+    overflow:auto;
+    padding:55px 46px;
+    position:relative;
+    isolation:isolate;
+    background:radial-gradient(ellipse at center,#fff6d9 0%,#f2d9a0 72%,#c99d61 100%);
+    color:#4b2c22;
+    border-radius:6px;
+    border:1px solid #9c713f;
+    box-shadow:0 35px 100px #000c,inset 0 0 35px #9b6d3d55,inset 0 0 8px #6d421f66;
+    transform-origin:left center;
+    transform:perspective(1400px) rotateY(-8deg) scaleX(.015) scaleY(.82);
+    opacity:0;
+    filter:brightness(.82) blur(.4px);
+}
+.letter::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse at 15% 20%,#8f5e2d22 0%,transparent 35%),radial-gradient(ellipse at 85% 75%,#8f5e2d20 0%,transparent 38%),linear-gradient(90deg,#7d4d2725,transparent 8%,transparent 92%,#7d4d2725);box-shadow:inset 12px 0 20px #71431d22,inset -12px 0 20px #71431d22;}
+.letter::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:repeating-linear-gradient(0deg,transparent 0px,transparent 5px,#8c632f0b 6px,transparent 7px);mix-blend-mode:multiply;opacity:.65;}
+.letter.unroll{animation:premiumUnroll 1.65s cubic-bezier(.16,.78,.18,1) forwards;will-change:transform,opacity;backface-visibility:hidden;}
+@keyframes premiumUnroll{
+    0%{opacity:0;transform:perspective(1400px) rotateY(-14deg) translate3d(-8%,0,0) scaleX(.015) scaleY(.72);filter:brightness(.82) blur(.4px);border-radius:50% 8px 8px 50%;}
+    25%{opacity:1;transform:perspective(1400px) rotateY(-8deg) translate3d(-3%,0,0) scaleX(.3) scaleY(.9);}
+    55%{transform:perspective(1400px) rotateY(-3deg) translate3d(0,0,0) scaleX(.72) scaleY(1.01);}
+    78%{transform:perspective(1400px) rotateY(1deg) scaleX(1.025) scaleY(.99);border-radius:9px;}
+    100%{opacity:1;transform:perspective(1400px) rotateY(0) scaleX(1) scaleY(1);filter:brightness(1) blur(0);border-radius:8px;}
+}
+.letter h2{
+    text-align:center;
+    color:#92223f;
+    font-size:
+        clamp(24px,4vw,35px);
+    margin-top:0;
+    text-shadow:
+        0 2px 5px #92223f22;
+}
+.text{
+    font-size:
+        clamp(15px,2vw,19px);
+    line-height:1.72;
+    white-space:pre-line;
+}
+.letter::-webkit-scrollbar{
+    width:7px;
+}
+.letter::-webkit-scrollbar-thumb{
+    background:#92223f77;
+    border-radius:10px;
+}
+/* =========================================================
+   CORAZONES DE CARTA
+========================================================= */
+.glow{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+.glow i{
+    position:absolute;
+    color:var(--c);
+    left:var(--x);
+    top:var(--y);
+    font-size:var(--s);
+    animation:
+        spark 3s infinite;
+}
+/* =========================================================
+   INDICADOR DE LECTURA
+========================================================= */
+.reading{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:
+        translateX(-50%);
+    z-index:50;
+    width:min(88vw,400px);
+    padding:10px 14px;
+    border-radius:18px;
+    background:#1a0814dd;
+    border:1px solid #ffc1dd33;
+    backdrop-filter:blur(8px);
+    opacity:0;
+    transition:1s ease;
+    pointer-events:none;
+}
+.reading.show{
+    opacity:1;
+}
+.readingText{
+    text-align:center;
+    font:
+        12px Arial;
+    color:#ffd8e8;
+    margin-bottom:6px;
+}
+.progress{
+    width:100%;
+    height:4px;
+    background:#ffffff18;
+    border-radius:10px;
+    overflow:hidden;
+}
+.progressBar{
+    width:0%;
+    height:100%;
+    background:
+        linear-gradient(90deg, #d62e65, #ff8db8);
+    transition:
+        width 1s linear;
+}
+/* =========================================================
+   BOTÓN SIGUIENTE
+========================================================= */
+.next{position:fixed;right:5vw;bottom:5vh;width:120px;height:120px;border:0;background:transparent;opacity:0;pointer-events:none;transition:1s;cursor:pointer;z-index:60;}
+.next.show{opacity:1;pointer-events:auto;}
+.carnationBtn{position:absolute;left:22px;top:12px;width:76px;height:76px;display:block;animation:nextPulse 1.7s ease-in-out infinite;filter:drop-shadow(0 6px 8px #0007);}
+.carnationBtn__petal{position:absolute;left:50%;top:50%;width:31%;height:66%;display:block;transform-origin:50% 50%;border-radius:48% 52% 58% 42%;background:repeating-linear-gradient(94deg,transparent 0 2px,#ffffff25 3px 4px),radial-gradient(circle at 50% 30%,#fff9 0 7%,transparent 19%),linear-gradient(150deg,#fff8 0%,#ff7896 30%,#d93468 70%,#8d1645 100%);box-shadow:inset 0 0 5px #fff5,inset -2px -4px 5px #74113d66,0 2px 3px #0003;}
+.carnationBtn__petal.p1{transform:translate(-50%,-50%) rotate(0deg);}.carnationBtn__petal.p2{transform:translate(-50%,-50%) rotate(60deg) scale(.96);}.carnationBtn__petal.p3{transform:translate(-50%,-50%) rotate(120deg) scale(.98);}.carnationBtn__petal.p4{transform:translate(-50%,-50%) rotate(180deg) scale(.94);}.carnationBtn__petal.p5{transform:translate(-50%,-50%) rotate(240deg) scale(.98);}.carnationBtn__petal.p6{transform:translate(-50%,-50%) rotate(300deg) scale(.96);}
+.carnationBtn__center{position:absolute;left:50%;top:50%;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#ffe8ae,#bc7726 55%,#5d3012 100%);box-shadow:0 2px 4px #0005,inset 0 0 3px #fff5;z-index:3;}
+@keyframes nextPulse{50%{transform:scale(1.08) rotate(-2deg);}}
+.next span{position:absolute;top:93px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#ffd9e7;font:bold 16px Arial;text-shadow:0 2px 8px #0008;}
+/* =========================================================
+   FINAL
+========================================================= */
+#final{
+    z-index:40;
+    display:grid;
+    place-items:center;
+    background:
+        radial-gradient(circle, #3d0a29, #11030d 72%);
+}
+.finalHeart{
+    width:min(82vw,500px);
+    height:min(82vw,500px);
+    position:relative;
+    cursor:pointer;
+    animation:
+        beat 1.35s infinite;
+    display:grid;
+    place-items:center;
+    filter:
+        drop-shadow(0 0 35px #ff2c6b66);
+}
+.heartEmoji{
+    font-family:
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Noto Color Emoji",
+        sans-serif;
+    font-size:
+        min(72vw,390px);
+    line-height:1;
+    filter:
+        drop-shadow(0 16px 25px #5b092a88);
+    user-select:none;
+    transition:
+        transform .45s
+        cubic-bezier(.2,.9,.2,1);
+}
+.finalText{
+    position:absolute;
+    z-index:3;
+    left:50%;
+    top:50%;
+    transform:
+        translate(-50%,-50%);
+    width:72%;
+    text-align:center;
+    font:
+        900
+        clamp(17px,4.1vw,30px)/1.2
+        Arial;
+    text-shadow:
+        0 3px 12px #5b092a;
+    pointer-events:none;
+}
+.grow .heartEmoji{
+    transform:scale(1.28);
+}
+@keyframes beat{
+    0%,100%{
+        transform:scale(1);
+    }
+    15%{
+        transform:scale(1.06);
+    }
+    30%{
+        transform:scale(1);
+    }
+    45%{
+        transform:scale(1.04);
+    }
+    60%{
+        transform:scale(1);
+    }
+}
+/* =========================================================
+   FINAL OVERLAY
+========================================================= */
+.finalMessage{
+    position:fixed;
+    left:50%;
+    top:10%;
+    transform:
+        translateX(-50%)
+        translateY(-20px);
+    width:90%;
+    text-align:center;
+    opacity:0;
+    color:#ffd9e7;
+    font:
+        bold
+        clamp(14px,3vw,19px)
+        Arial;
+    transition:
+        1s ease;
+    pointer-events:none;
+}
+.finalMessage.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media(max-width:600px){
+    .card{
+        min-height:410px;
+        padding:22px;
+    }
+    .snoopy{
+        max-height:29vh;
+    }
+    .mailbox{
+        transform:scale(.82);
+        transform-origin:center bottom;
+    }
+    #mailboxWrap.show{
+        transform:
+            translate(-50%,0)
+            scale(.82)!important;
+    }
+    .letter{
+        padding:45px 24px;
+    }
+    .ground{
+        height:48%;
+    }
+    .moon{
+        width:58px;
+        height:58px;
+    }
+    .next{
+        right:2vw;
+        bottom:3vh;
+        transform:scale(.82);
+    }
+    .reading{
+        bottom:8px;
+    }
+}
+@media(max-height:650px){
+    .card{
+        min-height:360px;
+    }
+    .snoopy{
+        max-height:22vh;
+    }
+    h1{
+        font-size:25px;
+        margin:5px 0 12px;
+    }
+    .letter{
+        max-height:90vh;
+        padding:32px 24px;
+    }
+}
+</style>
+</head>
+<body>
+<div id="app">
+    <!-- LLUVIA GLOBAL -->
+    <div id="rain"></div>
+    <!-- =====================================================
+         ESCENA 1 — FECHA
+    ====================================================== -->
+    <section id="date" class="scene active">
+        <div id="introFlowers" aria-hidden="true"></div>
+        <div class="card" id="card">
+            <!-- SE CONSERVA EXACTAMENTE TU IMAGEN -->
+            <img
+                class="snoopy"
+                src="snoopy.png"
+                alt="Snoopy con un corazón"
+            >
+            <h1>¿Qué día es hoy 😼?</h1>
+            <form id="form">
+                <input
+                    id="dateInput"
+                    class="date"
+                    placeholder="Escribe la fecha..."
+                    autocomplete="off"
+                >
+                <button class="btn">
+                    Comprobar ❤️
+                </button>
+            </form>
+            <div class="err" id="err"></div>
+            <div class="specialBox">
+                <div class="special" id="special">
+                    hoy es un día muy especial, porque hoy celebramos....
+                </div>
+            </div>
+            <div class="specialSub" id="specialSub">
+                ❤️ SIETE MESES JUNTITOSH ❤️
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         ESCENA 2 — JARDÍN
+    ====================================================== -->
+    <section id="garden" class="scene">
+        <div class="camera" id="camera">
+            <div class="moon"></div>
+            <div class="ground"></div>
+            <div id="flowers"></div>
+            <div id="mailboxWrap">
+                <div class="mailbox" id="mailbox">
+                    <div class="roof"></div>
+                    <div class="body"></div>
+                    <div class="slot"></div>
+                    <div class="flag"></div>
+                    <div class="hint">
+                        haz clic aquí...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         ESCENA 3 — CARTA CERRADA
+    ====================================================== -->
+    <section id="roll" class="scene">
+        <div id="rollSparks"></div>
+        <div class="roll" id="rollCard">
+            <div class="paper">
+                <div class="ribbon"></div>
+                <div class="knot"></div>
+            </div>
+            <div class="rollhint">
+                toca la carta para abrirla 💌
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         ESCENA 4 — CARTA ABIERTA
+    ====================================================== -->
+    <section id="open" class="scene">
+        <div class="glow" id="glow"></div>
+        <div class="letterWrap">
+            <article class="letter" id="letter">
+                <h2>
+                    Para mi niña hermosa ❤️
+                </h2>
+                <div class="text">
+
+Mi vida linda, mi niña amada:
+
+Hoy celebramos siete mesesitooosh juntitosh, y no puedo evitar sentirme agradecido por cada instante que hemos compartido, cada sonrisa, cada momento divertido, cada abrazo, cada beso. El tiempo pasa tan rápido cuando estoy contigo, y mi amor por ti no deja de crecer día con día a ritmo constante.
+
+Mi niña, gracias por hacer de mi vida un lugar más bonito. Gracias por confiar en mí, por acompañarme, por hacerme reír y por quererme como lo haces. Eres alguien muy especial, y cada día me siento más afortunado de tenerte a mi lado en esta etapa tan bonitaa.
+
+Quiero que sepas que, sin importar lo que venga, siempre voy a esforzarme por hacerte feliz, por apoyarte y por demostrarte que eres una parte muy importante de mi vida.
+
+Amor, espero que dentro de muchos meses más podamos leer estas cartas y sonreír al recordar todo lo que hemos construido juntos. Porque si algo tengo claro, es que quiero seguir creando recuerdos contigo, y que esos recuerdos los podamos construir juntosh, conseguir nuestras metas y todo lo que soñamosh.
+
+Felices siete meses, corazón. Gracias por ser tú y solamente tú. Te amo muchísimo mi pincesita hemoshaaa 😘❤️
+
+                </div>
+            </article>
+        </div>
+        <!-- INDICADOR DE LECTURA -->
+        <div class="reading" id="reading">
+            <div class="readingText" id="readingText">
+                leyendo una cartita para ti... ❤️
+            </div>
+            <div class="progress">
+                <div
+                    class="progressBar"
+                    id="progressBar"
+                ></div>
+            </div>
+        </div>
+        <!-- BOTÓN SIGUIENTE -->
+        <button
+            class="next"
+            id="next"
+            aria-label="Continuar"
+        >
+            <i class="carnationBtn" aria-hidden="true">
+                <b class="carnationBtn__petal p1"></b>
+                <b class="carnationBtn__petal p2"></b>
+                <b class="carnationBtn__petal p3"></b>
+                <b class="carnationBtn__petal p4"></b>
+                <b class="carnationBtn__petal p5"></b>
+                <b class="carnationBtn__petal p6"></b>
+                <b class="carnationBtn__center"></b>
+            </i>
+            <span>
+                siguiente...
+            </span>
+        </button>
+    </section>
+    <!-- =====================================================
+         ESCENA 5 — FINAL
+    ====================================================== -->
+    <section id="final" class="scene">
+        <div
+            class="finalMessage"
+            id="finalMessage"
+        >
+            y esto apenas es otro pedacito de todo lo que quiero vivir contigo ❤️
+        </div>
+        <div
+            class="finalHeart"
+            id="finalHeart"
+        >
+            <div class="heartEmoji">
+                ❤️
+            </div>
+            <div class="finalText">
+                FELIIIZ SÉPTIMO MESESARIOOO MI AMOOR,
+                <br>
+                TE AMITOOO DEMASIADO MI NIÑA HERMOSHA 😘
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+const CONFIG = {
+    mesNumero: 7,
+    fechaAceptada: [
+        "13 de octubre",
+        "13 octubre",
+        "13/10",
+        "13-10",
+        "13 10"
+    ],
+    tiempoCarta: 60000
+};
+/* =========================================================
+   UTILIDAD
+========================================================= */
+const $ = selector =>
+    document.querySelector(selector);
+const sceneNames = [
+    "date",
+    "garden",
+    "roll",
+    "open",
+    "final"
+];
+function show(name){
+    sceneNames.forEach(scene => {
+        $("#" + scene)
+            .classList
+            .toggle(
+                "active",
+                scene === name
+            );
+    });
+}
+/* =========================================================
+   LLUVIA INFINITA DE CORAZONES
+========================================================= */
+const rain = $("#rain");
+const chars = [
+    "♥",
+    "❤",
+    "♡",
+    "💗",
+    "💖"
+];
+for(let i = 0; i < 90; i++){
+    const e =
+        document.createElement("span");
+    e.className = "rain";
+    e.textContent =
+        chars[
+            Math.random() * chars.length | 0
+        ];
+    e.style.cssText = `
+        --x:${Math.random() * 100}%;
+        --s:${10 + Math.random() * 25}px;
+        --o:${.12 + Math.random() * .4};
+        --d:${6 + Math.random() * 11}s;
+        --delay:${-Math.random() * 16}s;
+        --dx:${Math.random() * 100 - 50}px;
+    `;
+    rain.appendChild(e);
+}
+/* =========================================================
+   FECHA
+========================================================= */
+$("#form").onsubmit = event => {
+    event.preventDefault();
+    const input =
+        $("#dateInput");
+    const value =
+        input.value
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(
+                /[\u0300-\u036f]/g,
+                ""
+            )
+            .replace(
+                /\s+/g,
+                " "
+            );
+    if(!CONFIG.fechaAceptada.includes(value)){
+        $("#err").textContent =
+            "Escribe 13 de octubre ❤️";
+        input.animate(
+            [
+                {transform:"translateX(0)"},
+                {transform:"translateX(-8px)"},
+                {transform:"translateX(8px)"},
+                {transform:"translateX(0)"}
+            ],
+            {
+                duration:350
+            }
+        );
+        return;
+    }
+    $("#err").textContent = "";
+    input.blur();
+    /* Primera revelación */
+    $("#special")
+        .classList
+        .add("show");
+    setTimeout(() => {
+        $("#specialSub")
+            .classList
+            .add("show");
+    },700);
+    /* Preparar salida */
+    setTimeout(() => {
+        $("#card")
+            .classList
+            .add("lift");
+    },3000);
+    setTimeout(() => {
+        startGarden();
+    },3900);
+};
+/* =========================================================
+   FLORES
+========================================================= */
+const types = [
+    "rose",
+    "tulip",
+    "carnation",
+    "sunflower",
+    "daisy"
+];
+const colors = {
+    rose:[
+        "#d91f4b",
+        "#ef3f63",
+        "#ff6e88",
+        "#bd1743",
+        "#f49bb5"
+    ],
+    tulip:[
+        "#e93668",
+        "#ff6f85",
+        "#f08a32",
+        "#ffd34a",
+        "#a94ad8"
+    ],
+    carnation:[
+        "#ee5274",
+        "#ff7e98",
+        "#ffb3c2",
+        "#f8e8e8",
+        "#d946a2"
+    ],
+    sunflower:[
+        "#f3b91d",
+        "#ffd33c",
+        "#f8c52b"
+    ],
+    daisy:[
+        "#fff8ed",
+        "#fffdf7"
+    ]
+};
+const secondary = {
+    rose:[
+        "#74112f",
+        "#92183d"
+    ],
+    tulip:[
+        "#79173e",
+        "#a42c50"
+    ],
+    carnation:[
+        "#8f234d",
+        "#b72c60"
+    ],
+    sunflower:[
+        "#b87508",
+        "#d88d08"
+    ],
+    daisy:[
+        "#d7d0c4",
+        "#ebe4d8"
+    ]
+};
+const counts = {
+    rose:12,
+    tulip:6,
+    carnation:16,
+    sunflower:18,
+    daisy:10
+};
+function makeFlower(index,container,mode="garden"){
+    const weights=["rose","rose","tulip","carnation","carnation","sunflower","daisy"];
+    const type=weights[index%weights.length];
+    const flower=document.createElement("div");
+    const intro=mode==="intro";
+    const depth=Math.random();
+    const bottom=intro ? (Math.random()<.52 ? -2+Math.random()*13 : Math.random()*18) : 5+Math.random()*38;
+    const height=intro ? 250+Math.random()*170 : 115+Math.random()*185;
+    let width=intro ? 105+Math.random()*95 : 38+Math.random()*68;
+    if(type==="sunflower" && !intro){width=58+Math.random()*42;}
+    const x=intro ? (Math.random()<.54 ? Math.random()*19 : 81+Math.random()*19) : 1+Math.random()*98;
+    const bloom=(index*(intro?.065:.035)+Math.random()*.38).toFixed(2);
+    const color=colors[type][Math.random()*colors[type].length|0];
+    const color2=secondary[type][Math.random()*secondary[type].length|0];
+    flower.className=`flower flower--${type}`;
+    flower.style.cssText=`--x:${x}%;--b:${bottom}%;--w:${width}px;--h:${height}px;--lean:${Math.random()*20-10}deg;--stemlean:${Math.random()*20-10}deg;--sw:${2.8+Math.random()*2.8}s;--bloom:${bloom}s;--c:${color};--c2:${color2};z-index:${Math.floor(2+depth*8)};`;
+    let head="";
+    if(type==="rose"){
+        head=`<div class="rose__outer-petal rose__outer-petal--1"></div><div class="rose__outer-petal rose__outer-petal--2"></div><div class="rose__outer-petal rose__outer-petal--3"></div><div class="rose__outer-petal rose__outer-petal--4"></div><div class="rose__petal rose__petal--1"></div><div class="rose__petal rose__petal--2"></div><div class="rose__petal rose__petal--3"></div><div class="rose__petal rose__petal--4"></div><div class="rose__petal rose__petal--5"></div><div class="rose__center"></div>`;
+    }else if(type==="tulip"){
+        head=`<div class="tulip__petal tulip__petal--left"></div><div class="tulip__petal tulip__petal--center"></div><div class="tulip__petal tulip__petal--right"></div><div class="tulip__petal tulip__petal--back"></div>`;
+    }else if(type==="carnation"){
+        head=`<div class="carnation__petal carnation__petal--1"></div><div class="carnation__petal carnation__petal--2"></div><div class="carnation__petal carnation__petal--3"></div><div class="carnation__petal carnation__petal--4"></div><div class="carnation__petal carnation__petal--5"></div><div class="carnation__petal carnation__petal--6"></div><div class="carnation__center"></div>`;
+    }else if(type==="sunflower"){
+        head=`<div class="sunflower__petals">${Array.from({length:16},()=>`<span class="sunflower__petal"></span>`).join("")}</div><div class="sunflower__center">${Array.from({length:9},()=>`<span></span>`).join("")}</div>`;
+    }else{
+        head=`<div class="daisy__petals">${Array.from({length:12},()=>`<span class="daisy__petal"></span>`).join("")}</div><div class="daisy__center"></div>`;
+    }
+    flower.innerHTML=`<div class="botanical"><div class="flower__stem"><div class="flower__leaf flower__leaf--left"></div><div class="flower__leaf flower__leaf--right"></div></div><div class="flower__head">${head}</div></div>`;
+    container.appendChild(flower);
+}
+/* =========================================================
+   CREACIÓN DEL JARDÍN
+========================================================= */
+const gardenFlowers =
+    $("#flowers");
+for(let i = 0; i < 94; i++){
+    makeFlower(
+        i,
+        gardenFlowers,
+        "garden"
+    );
+}
+const introFlowers =
+    $("#introFlowers");
+for(let i = 0; i < 28; i++){
+    makeFlower(
+        i,
+        introFlowers,
+        "intro"
+    );
+}
+/* =========================================================
+   INTERACCIÓN DEL JARDÍN
+========================================================= */
+function startGarden(){
+    show("garden");
+    setTimeout(() => {
+        $("#camera")
+            .classList
+            .add("zoom");
+    },900);
+    setTimeout(() => {
+        $("#mailboxWrap")
+            .classList
+            .add("show");
+    },900);
+    const flowers =
+        [
+            ...document.querySelectorAll(
+                "#flowers .flower"
+            )
+        ];
+    function react(x,y){
+        flowers.forEach(flower => {
+            const rect =
+                flower.getBoundingClientRect();
+            const dx =
+                x -
+                (
+                    rect.left +
+                    rect.width / 2
+                );
+            const dy =
+                y -
+                (
+                    rect.top +
+                    rect.height / 2
+                );
+            const distance =
+                Math.hypot(dx,dy);
+            if(distance < 190){
+                const q =
+                    1 -
+                    distance / 190;
+                const botanical =
+                    flower.querySelector(
+                        ".botanical"
+                    );
+                botanical.style.transition =
+                    ".35s ease-out";
+                botanical.style.transform = `
+                    rotate(
+                        ${Math.max(
+                            -7,
+                            Math.min(
+                                7,
+                                dx * .018 * q
+                            )
+                        )}deg
+                    )
+                    translateX(
+                        ${dx * .025 * q}px
+                    )
+                `;
+                clearTimeout(
+                    flower._t
+                );
+                flower._t =
+                    setTimeout(() => {
+                        botanical.style.transform =
+                            "";
+                        botanical.style.transition =
+                            "";
+                    },520);
+            }
+        });
+    }
+    $("#garden").onmousemove =
+        event => {
+            react(
+                event.clientX,
+                event.clientY
+            );
+        };
+    $("#garden").ontouchmove =
+        event => {
+            const touch =
+                event.touches[0];
+            if(touch){
+                react(
+                    touch.clientX,
+                    touch.clientY
+                );
+            }
+        };
+    /* Sacudir el jardín con movimiento */
+    window.addEventListener(
+        "devicemotion",
+        event => {
+            const acceleration =
+                event.accelerationIncludingGravity;
+            if(
+                acceleration &&
+                (
+                    Math.abs(
+                        acceleration.x || 0
+                    )
+                    +
+                    Math.abs(
+                        acceleration.y || 0
+                    )
+                    +
+                    Math.abs(
+                        acceleration.z || 0
+                    )
+                ) > 28
+            ){
+                flowers.forEach(
+                    (flower,index) => {
+                        const botanical =
+                            flower.querySelector(
+                                ".botanical"
+                            );
+                        botanical.style.transition =
+                            ".2s ease-out";
+                        botanical.style.transform = `
+                            rotate(
+                                ${
+                                    (index % 2 ? -1 : 1)
+                                    *
+                                    (
+                                        3 +
+                                        Math.random() * 5
+                                    )
+                                }deg
+                            )
+                        `;
+                        setTimeout(() => {
+                            botanical.style.transform =
+                                "";
+                            botanical.style.transition =
+                                "";
+                        },650);
+                    }
+                );
+            }
+        },
+        {
+            passive:true
+        }
+    );
+}
+/* =========================================================
+   BUZÓN
+========================================================= */
+$("#mailbox").onclick = () => {
+    $("#mailbox")
+        .classList
+        .add("open");
+    /* lluvia de corazones */
+    for(let i = 0; i < 50; i++){
+        const spark =
+            document.createElement("i");
+        spark.className =
+            "spark";
+        spark.textContent =
+            "♥";
+        spark.style.cssText = `
+            --x:${Math.random() * 100}%;
+            --y:${Math.random() * 100}%;
+            --s:${8 + Math.random() * 25}px;
+            --c:
+            ${
+                [
+                    "#ff315f",
+                    "#ff77b7",
+                    "#bd58ff"
+                ][i % 3]
+            };
+            --d:${-Math.random() * 4}s;
+        `;
+        $("#rollSparks")
+            .appendChild(spark);
+    }
+    setTimeout(() => {
+        show("roll");
+    },500);
+    setTimeout(() => {
+        $("#rollCard")
+            .classList
+            .add("show");
+    },800);
+};
+/* =========================================================
+   ABRIR CARTA
+========================================================= */
+$("#rollCard").onclick = () => {
+    show("open");
+    /* Corazones */
+    for(let i = 0; i < 60; i++){
+        const spark =
+            document.createElement("i");
+        spark.textContent =
+            "♥";
+        spark.style.cssText = `
+            --x:${Math.random() * 100}%;
+            --y:${Math.random() * 100}%;
+            --s:${9 + Math.random() * 25}px;
+            --c:
+            ${
+                [
+                    "#ff315f",
+                    "#ff77b7",
+                    "#a84cff"
+                ][i % 3]
+            };
+            --d:${-Math.random() * 3}s;
+        `;
+        $("#glow")
+            .appendChild(spark);
+    }
+    requestAnimationFrame(() => {
+        $("#letter")
+            .classList
+            .add("unroll");
+    });
+    startReadingTimer();
+};
+/* =========================================================
+   TEMPORIZADOR DE LECTURA
+========================================================= */
+let readingInterval = null;
+function startReadingTimer(){
+    const reading =
+        $("#reading");
+    const progressBar =
+        $("#progressBar");
+    const readingText =
+        $("#readingText");
+    reading.classList.add("show");
+    let elapsed = 0;
+    const total =
+        CONFIG.tiempoCarta;
+    const step = 1000;
+    readingInterval =
+        setInterval(() => {
+            elapsed += step;
+            const percentage =
+                Math.min(
+                    100,
+                    (elapsed / total) * 100
+                );
+            progressBar.style.width =
+                percentage + "%";
+            const remaining =
+                Math.max(
+                    0,
+                    Math.ceil(
+                        (total - elapsed) / 1000
+                    )
+                );
+            if(remaining > 0){
+                readingText.textContent =
+                    `disfruta tu cartita... ❤️`;
+            }
+            if(elapsed >= total){
+                clearInterval(
+                    readingInterval
+                );
+                readingText.textContent =
+                    "ya puedes continuar, mi niña ❤️";
+                progressBar.style.width =
+                    "100%";
+                $("#next")
+                    .classList
+                    .add("show");
+                /* Pequeña celebración */
+                createMiniCelebration();
+            }
+        },step);
+}
+/* =========================================================
+   CELEBRACIÓN AL TERMINAR
+========================================================= */
+function createMiniCelebration(){
+    for(let i = 0; i < 18; i++){
+        const heart =
+            document.createElement("span");
+        heart.textContent =
+            [
+                "♥",
+                "❤",
+                "💗"
+            ][i % 3];
+        heart.style.cssText = `
+            position:fixed;
+            left:${40 + Math.random() * 20}%;
+            bottom:15%;
+            z-index:70;
+            pointer-events:none;
+            font-size:${12 + Math.random() * 18}px;
+            color:
+            ${
+                [
+                    "#ff496f",
+                    "#ff8ac0",
+                    "#c46cff"
+                ][i % 3]
+            };
+        `;
+        $("#open")
+            .appendChild(heart);
+        const x =
+            (Math.random() - .5) * 300;
+        const y =
+            -(100 + Math.random() * 250);
+        heart.animate(
+            [
+                {
+                    transform:
+                        "translate(-50%,0) scale(.3)",
+                    opacity:0
+                },
+                {
+                    transform:
+                        "translate(-50%,-40px) scale(1)",
+                    opacity:1
+                },
+                {
+                    transform:
+                        `translate(
+                            calc(-50% + ${x}px),
+                            ${y}px
+                        )
+                        scale(.7)`,
+                    opacity:0
+                }
+            ],
+            {
+                duration:
+                    1600 + Math.random() * 600,
+                easing:
+                    "cubic-bezier(.2,.8,.2,1)"
+            }
+        ).finished.then(() => {
+            heart.remove();
+        });
+    }
+}
+/* =========================================================
+   SIGUIENTE
+========================================================= */
+$("#next").onclick = () => {
+    if(readingInterval){
+        clearInterval(
+            readingInterval
+        );
+    }
+    show("final");
+    setTimeout(() => {
+        $("#finalMessage")
+            .classList
+            .add("show");
+    },700);
+};
+/* =========================================================
+   CORAZÓN FINAL
+========================================================= */
+$("#finalHeart").onclick = () => {
+    $("#finalHeart")
+        .classList
+        .toggle("grow");
+    for(let i = 0; i < 35; i++){
+        const heart =
+            document.createElement("b");
+        heart.textContent =
+            [
+                "♥",
+                "❤",
+                "💗"
+            ][i % 3];
+        heart.style.cssText = `
+            position:absolute;
+            left:50%;
+            top:50%;
+            z-index:5;
+            color:
+            ${
+                [
+                    "#ff496f",
+                    "#ff8ac0",
+                    "#c46cff"
+                ][i % 3]
+            };
+            font-size:
+            ${12 + Math.random() * 24}px;
+            pointer-events:none;
+        `;
+        $("#final")
+            .appendChild(heart);
+        const angle =
+            Math.random() * Math.PI * 2;
+        const distance =
+            100 + Math.random() * 300;
+        const x =
+            Math.cos(angle) *
+            distance;
+        const y =
+            Math.sin(angle) *
+            distance;
+        heart.animate(
+            [
+                {
+                    transform:
+                        "translate(-50%,-50%) scale(.2)",
+                    opacity:0
+                },
+                {
+                    transform:
+                        "translate(-50%,-50%) scale(1)",
+                    opacity:1,
+                    offset:.2
+                },
+                {
+                    transform:
+                        `
+                        translate(
+                            calc(-50% + ${x}px),
+                            calc(-50% + ${y}px)
+                        )
+                        scale(.5)
+                        `,
+                    opacity:0
+                }
+            ],
+            {
+                duration:
+                    1300 +
+                    Math.random() * 700,
+                easing:
+                    "cubic-bezier(.2,.8,.2,1)"
+            }
+        ).finished.then(() => {
+            heart.remove();
+        });
+    }
+};
+/* =========================================================
+   ENTER EN INPUT
+========================================================= */
+$("#dateInput").addEventListener(
+    "keydown",
+    event => {
+        if(event.key === "Enter"){
+            $("#form").requestSubmit();
+        }
+    }
+);
+/* =========================================================
+   EVITAR ZOOM ACCIDENTAL EN IOS
+========================================================= */
+document.addEventListener(
+    "gesturestart",
+    event => {
+        event.preventDefault();
+    }
+);
+/* =========================================================
+   PEQUEÑO EFECTO AL CARGAR
+========================================================= */
+window.addEventListener(
+    "load",
+    () => {
+        setTimeout(() => {
+            $("#card").animate(
+                [
+                    {
+                        opacity:0,
+                        transform:
+                            "translateY(25px) scale(.97)"
+                    },
+                    {
+                        opacity:1,
+                        transform:
+                            "translateY(0) scale(1)"
+                    }
+                ],
+                {
+                    duration:1100,
+                    easing:"cubic-bezier(.2,.9,.2,1)"
+                }
+            );
+        },250);
+    }
+);
+</script>
+</body>
+</html>
